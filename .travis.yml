@@ -1,0 +1,19 @@
+language: node_js
+node_js:
+- node
+
+addons:
+  ssh_known_hosts: huajingkun.com
+
+before_install:
+- git clone --depth=1 --branch=hexo https://github.com/hjkcai/blog.git __hexo
+- cd __hexo
+- bash build/before_install.sh
+
+script:
+- yarn run build
+
+after_success:
+- bash build/after_success.sh
+
+cache: yarn
