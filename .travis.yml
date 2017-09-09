@@ -10,6 +10,7 @@ before_install:
 - rm deploy-key.enc
 - chmod 600 deploy-key
 - mv deploy-key ~/.ssh/id_rsa
+- mv deploy-key.pub ~/.ssh/id_rsa.pub
 
 script:
 - yarn run build
