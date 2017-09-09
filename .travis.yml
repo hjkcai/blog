@@ -8,7 +8,6 @@ addons:
 before_install:
 - git clone --depth=1 --branch=hexo https://github.com/hjkcai/blog.git __hexo && cd __hexo
 - git submodule update --init --recursive
-- git submodule update --recursive --remote
 - bash build/before_install.sh
 
 script:
