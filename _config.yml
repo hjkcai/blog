@@ -79,6 +79,10 @@ theme: next
 deploy:
   type:
 
+exclude:
+  - scripts/after_success.sh
+  - scripts/before_install.sh
+
 all_minifier: true
 html_minifier:
   enable: true
