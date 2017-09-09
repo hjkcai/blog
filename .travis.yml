@@ -1,0 +1,26 @@
+language: node_js
+node_js:
+- node
+
+addons:
+  ssh_known_hosts: huajingkun.com
+
+before_install:
+- openssl aes-256-cbc -K $encrypted_0e425c9ccbd3_key -iv $encrypted_0e425c9ccbd3_iv -in deploy-key.enc -out deploy-key -d
+- rm deploy-key.enc
+- chmod 600 deploy-key
+- mv deploy-key ~/.ssh/id_rsa
+- git submodule update --init --recursive
+
+script:
+- yarn run build
+
+after_success:
+- cd public
+- git init
+- git remote add deploy "blog-deploy@huajingkun.com:/home/blog-deploy/blog.git"
+- git config user.name "Travis CI"
+- git config user.email "hjkcai+travisCI@gmail.com"
+- git add .
+- git commit -m "deploy"
+- git push --force deploy master
