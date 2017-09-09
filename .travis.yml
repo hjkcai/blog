@@ -13,3 +13,5 @@ script:
 
 after_success:
 - bash scripts/after_success.sh
+
+cache: yarn
