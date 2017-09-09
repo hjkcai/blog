@@ -6,7 +6,7 @@
     "version": "3.3.9"
   },
   "scripts": {
-    "build": "hexo generate"
+    "build": "node scripts/move.js && hexo generate"
   },
   "dependencies": {
     "hexo": "^3.3.9",
@@ -19,5 +19,9 @@
     "hexo-renderer-marked": "^0.3.0",
     "hexo-renderer-stylus": "^0.3.1",
     "hexo-server": "^0.2.0"
+  },
+  "devDependencies": {
+    "glob": "^7.1.2",
+    "shelljs": "^0.7.8"
   }
 }
