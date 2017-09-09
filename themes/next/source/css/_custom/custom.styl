@@ -1,0 +1,191 @@
+// 一些变量
+$shadow = 0 2px 6px rgba(0, 0, 0, 0.33)
+$switch-layout-width = 767px
+$header-height = 321px
+$header-height-small = 226px
+$footer-height = 96px
+$footer-margin = 50px
+
+// 调整字体大小
+body
+  font-size: 16px
+
+.posts-expand .post-meta
+  font-size: 14px
+
+// 去除 logo 的黑色背景
+.brand
+  background: inherit
+  color: inherit
+
+  &:hover
+    color: inherit
+
+// 页脚心形显示红色
+.fa-heart
+  color: #F44336
+
+// 移除页面顶端横线
+.headband
+  display: none
+
+// 添加 header 背景图
+header#header
+  height: $header-height
+  background: url(/images/background.jpg)
+  background-position: center 110%
+  background-repeat-y: no-repeat;
+
+  @media (max-width: $switch-layout-width)
+    height: $header-height-small
+    background-position-y: 90%
+
+// 微调 logo
+.site-title
+  line-height: 1em
+  transition: 0.33s ease
+  transition-property: transform, text-shadow
+
+  &:hover
+    transform: scale(1.25) rotate(-5deg);
+    text-shadow: $shadow
+
+  @media (max-width: $switch-layout-width)
+    font-size: 46px
+
+// 设置内容区域最小高度
+main#main
+  min-height: '-webkit-calc(100vh - %s)' % ($header-height + $footer-height + $footer-margin)
+  min-height: 'calc(100vh - %s)' % ($header-height + $footer-height + $footer-margin)
+
+  @media (max-width: $switch-layout-width)
+    min-height: '-webkit-calc(100vh - %s)' % ($header-height-small + $footer-height + $footer-margin)
+    min-height: 'calc(100vh - %s)' % ($header-height-small + $footer-height + $footer-margin)
+
+// 添加 footer 的背景色和上间距
+footer#footer
+  height: $footer-height
+  margin-top: $footer-margin
+  background-color: #f8f8f8
+
+  .footer-inner
+    margin: 0 auto
+    padding: 20px 0
+
+// 圆形头像
+.site-author-image
+  border-radius: 50%
+  margin-top: 16px
+
+.menu .menu-item
+  // 修改导航栏图标鼠标移入效果
+  a
+    display: flex
+    align-items: center
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif
+    transition: text-shadow 0.33s ease
+
+    @media (min-width: $switch-layout-width + 1px)
+      flex-direction: column
+
+    @media (max-width: $switch-layout-width)
+      padding-left: 6px
+      font-size: 14px
+
+    &:hover
+      border-bottom-color: transparent
+      text-shadow: $shadow
+
+  // 加大导航栏图标 + 位置微调
+  @media (min-width: $switch-layout-width + 1px)
+    .fa
+      margin-right: 1px;
+      font-size: 16px
+
+    .fa-home
+      transform: scale(1.05) translateY(1px)
+
+    .fa-th
+      transform: scaleX(0.8) translate(1.5px, 1px)
+
+    .fa-archive
+      transform: scale(0.93)
+
+  @media (max-width: $switch-layout-width)
+    .fa
+      margin-right: 12px
+      font-size: 24px
+
+    .fa-home
+      transform: scale(1.05)
+
+    .fa-th
+      transform: scaleX(0.8)
+
+    .fa-archive
+      transform: scale(0.93)
+
+// 调整小屏下的导航菜单样式
+@media (max-width: $switch-layout-width)
+  .site-nav-toggle
+    z-index: 1
+
+    button
+      outline: 0
+
+  nav.site-nav
+    top: 0
+    z-index: 0
+
+    ul#menu
+      margin-top: 48px
+
+// 翻页按钮魔改
+.pagination
+  border: 0
+
+  .page-number, .prev, .next
+    border: 0
+    transition: 0.33s ease
+
+    &:hover
+      text-shadow: $shadow
+
+    &.current
+      background-color: #555
+
+// 页面标题链接
+.post-title-link
+  transition: text-shadow 0.33s ease
+
+  &:hover
+    text-shadow: $shadow
+
+  &::before
+    display: none
+
+// 社交账号
+.links-of-author
+  margin-top: 32px
+
+  .links-of-author-item
+    display: block
+
+    a
+      border-bottom: 0
+
+      &::before
+        display: none
+
+      .fa
+        margin-right: 4px
+
+// 侧边栏下方花边
+#sidebar .border-bottom-image
+  height: 18px
+  margin-top: 20px
+  background: url(/images/line.png)
+  background-size: contain
+  background-position: center
+  background-repeat: no-repeat
+  opacity: 0.5
