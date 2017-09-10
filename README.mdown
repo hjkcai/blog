@@ -1,1 +1,16 @@
-# TDB
+# Jingkun's blog
+
+这里是我的博客的源码！
+
+[https://huajingkun.com](https://huajingkun.com)
+
+文章组织成可以在 vscode 里直接编辑，在 github 上直接阅读，又能用来给 hexo 生成页面
+
+每个文件夹里面都是一篇文章，以及文章相关的图片等文件
+
+关于博客的技术细节（比如怎么实现这样的架构以及我的一些思考）写在博文里面
+
+切到 hexo 分支看代码
+
+欢迎 dalao 们的 star 和 issue ！
+
