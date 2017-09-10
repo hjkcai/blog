@@ -94,3 +94,7 @@ css_minifier:
     - '*.min.css'
 image_minifier:
   enable: false
+
+cdn:
+  enable: true
+  base: //cdn.huajingkun.com
