@@ -32,28 +32,31 @@ glob
   .filter(file => /(.*)\/\1.md$/.test(file))
   .map(file => ({ file, dest: file.replace(/(.*)\/(.*)\/\2.md$/, '$1/$2.md') }))
   .forEach(({ file, dest }) => {
-    // 读取 markdown 并修改图片标记（![]()）中的 url
-    const htmlRaw = fs.readFileSync(file).toString()
-    const html = htmlRaw.replace(/!\[(.*)\]\((.*)\)/g, (str, alt, url) => `![${alt}](${resolveUrl(url, file)})`)
-    const $ = cheerio.load(html)
+    let html = fs.readFileSync(file).toString()
 
-    // 遍历资源标签并修改其中的 url
-    Object.keys(tagAttrs).forEach(selector => {
-      const attr = tagAttrs[selector]
-      const elements = $(selector)
+    if (process.env.NODE_ENV === 'production') {
+      // 读取 markdown 并修改图片标记（![]()）中的 url
+      html = html.replace(/!\[(.*)\]\((.*)\)/g, (str, alt, url) => `![${alt}](${resolveUrl(url, file)})`)
+      const $ = cheerio.load(html)
 
-      if (elements.length) {
-        const attrValue = elements.attr(attr)
-        elements.attr(attr, resolveUrl(attrValue, file))
-      }
-    })
+      // 遍历资源标签并修改其中的 url
+      Object.keys(tagAttrs).forEach(selector => {
+        const attr = tagAttrs[selector]
+        const elements = $(selector)
 
-    // 由于输入的是 markdown 文件
-    // cheerio 在生成 html 时会自动在开头结尾添加一些标签
-    // 这里要把这些标签都去掉
-    const changedHtml = $.html({ decodeEntities: false }).replace(/^<html><head><\/head><body>/, '').replace(/<\/body><\/html>$/, '')
+        if (elements.length) {
+          const attrValue = elements.attr(attr)
+          elements.attr(attr, resolveUrl(attrValue, file))
+        }
+      })
+
+      // 由于输入的是 markdown 文件
+      // cheerio 在生成 html 时会自动在开头结尾添加一些标签
+      // 这里要把这些标签都去掉
+      html = $.html({ decodeEntities: false }).replace(/^<html><head><\/head><body>/, '').replace(/<\/body><\/html>$/, '')
+    }
 
     // 将文件写入新的位置, 并删除原来的文件
-    fs.writeFileSync(dest, changedHtml)
+    fs.writeFileSync(dest, html)
     fs.unlinkSync(file)
   })
