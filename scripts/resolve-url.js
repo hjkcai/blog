@@ -43,11 +43,7 @@ glob
       Object.keys(tagAttrs).forEach(selector => {
         const attr = tagAttrs[selector]
         const elements = $(selector)
-
-        if (elements.length) {
-          const attrValue = elements.attr(attr)
-          elements.attr(attr, resolveUrl(attrValue, file))
-        }
+        elements.attr(attr, (index, attrValue) => resolveUrl(attrValue, file))
       })
 
       // 由于输入的是 markdown 文件
