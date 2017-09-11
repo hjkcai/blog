@@ -6,12 +6,12 @@ addons:
   ssh_known_hosts: huajingkun.com
 
 before_install:
-- bash build/before_install.sh
+- bash .travis/before_install.sh
 
 script:
 - yarn run build
 
 after_success:
-- bash build/after_success.sh
+- bash .travis/after_success.sh
 
 cache: yarn

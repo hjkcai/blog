@@ -1,0 +1,59 @@
+'use strict'
+
+const fs = require('fs')
+const glob = require('glob')
+const path = require('path')
+const cheerio = require('cheerio')
+
+// 将 url 解析到正确位置
+function resolveUrl (url, file) {
+  if (!url.includes('//') && !url.startsWith('data:')) {
+    return path.resolve('/article', file.replace('./source/_posts/', ''), '..', url)
+  }
+
+  return url
+}
+
+// https://github.com/zqjimlove/hexo-cdnify/blob/master/lib/cdnify.js
+const tagAttrs = {
+  'img[data-src]': 'data-src',
+  'img[src]': 'src',
+  'link[rel="apple-touch-icon"]': 'href',
+  'link[rel="icon"]': 'href',
+  'link[rel="shortcut icon"]': 'href',
+  'link[rel="stylesheet"]': 'href',
+  'script[src]': 'src',
+  'source[src]': 'src',
+  'video[poster]': 'poster'
+}
+
+glob
+  .sync('./source/_posts/**/*.md')
+  .filter(file => /(.*)\/\1.md$/.test(file))
+  .map(file => ({ file, dest: file.replace(/(.*)\/(.*)\/\2.md$/, '$1/$2.md') }))
+  .forEach(({ file, dest }) => {
+    // 读取 markdown 并修改图片标记（![]()）中的 url
+    const htmlRaw = fs.readFileSync(file).toString()
+    const html = htmlRaw.replace(/!\[(.*)\]\((.*)\)/g, (str, alt, url) => `![${alt}](${resolveUrl(url, file)})`)
+    const $ = cheerio.load(html)
+
+    // 遍历资源标签并修改其中的 url
+    Object.keys(tagAttrs).forEach(selector => {
+      const attr = tagAttrs[selector]
+      const elements = $(selector)
+
+      if (elements.length) {
+        const attrValue = elements.attr(attr)
+        elements.attr(attr, resolveUrl(attrValue, file))
+      }
+    })
+
+    // 由于输入的是 markdown 文件
+    // cheerio 在生成 html 时会自动在开头结尾添加一些标签
+    // 这里要把这些标签都去掉
+    const changedHtml = $.html({ decodeEntities: false }).replace(/^<html><head><\/head><body>/, '').replace(/<\/body><\/html>$/, '')
+
+    // 将文件写入新的位置, 并删除原来的文件
+    fs.writeFileSync(dest, changedHtml)
+    fs.unlinkSync(file)
+  })
