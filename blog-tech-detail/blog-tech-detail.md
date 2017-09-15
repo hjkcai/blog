@@ -44,3 +44,37 @@ tags:
 当然！这玩意儿的坑也是不少的…现在是时候踩坑了
 
 # Hexo 踩坑记
+
+## NexT 主题
+
+hexo 的主题还是蛮多的。当然，作为一个懂一点点设计（啊呸）的人当然想自己搞一套！后来还是决定在 NexT 主题的基础上进行少量的修改后使用。其中最大的修改就是顶栏的背景图片和博客名称了。感觉魔改完一波还是不错的233333
+
+## 文件结构
+
+hexo 默认的文件结构是没办法做到直接在 vscode 直接编辑预览 markdown 的，因为默认情况下，如果源文件结构是这样的：
+
+```
+_posts/
+  hello-world.md
+  hello-world/
+    image.jpg
+```
+
+最后生成的文件的结构是：
+
+```
+article/
+  hello-world/
+    image.jpg
+    index.html
+```
+
+问题就在于 hexo 把 markdown 文件*往里移了一层*，但文件内部的 url 不变，所以默认情况下是不可能做到直接预览的…但不能直接预览要怎么愉快地写作？？于是我想到了第一个魔改：
+
+**编译前把 markdown 移出来一层**
+
+😏 具体是在 `_posts` 里，找到目录 A 下与目录同名的 A.md文件，把 A.md 移到 A 目录的上面一层就可以了。有兴趣可以[点这里](https://github.com/hjkcai/blog/blob/hexo/scripts/resolve-url.js#L33)看具体代码。
+
+## CDN 储存
+
+为了保证博客的加载速度，所有静态资源都是使用 CDN 进行加速的
