@@ -6,8 +6,10 @@
     "version": "3.3.9"
   },
   "scripts": {
-    "dev": "NODE_ENV=development hexo server",
-    "build": "NODE_ENV=production hexo generate"
+    "start": "NODE_ENV=development hexo server",
+    "build": "NODE_ENV=production hexo generate",
+    "clean": "cd source/_posts && git reset HEAD --hard && git clean -fd",
+    "update": "git submodule update --remote --recursive"
   },
   "dependencies": {
     "hexo": "^3.3.9",
