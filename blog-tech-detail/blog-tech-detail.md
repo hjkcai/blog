@@ -1,7 +1,6 @@
 ---
 title: 博客的技术细节和思考
 date: 2017/09/11 19:00:00
-draft: true
 categories:
   - 技术
   - Web
@@ -47,7 +46,7 @@ tags:
 
 ## NexT 主题
 
-hexo 的主题还是蛮多的。当然，作为一个懂一点点设计（啊呸）的人当然想自己搞一套！后来还是决定在 NexT 主题的基础上进行少量的修改后使用。其中最大的修改就是顶栏的背景图片和博客名称了。感觉魔改完一波还是不错的233333
+hexo 的主题还是蛮多的。当然，作为一个懂一点点设计（啊呸）的人当然想自己搞一套！后来还是决定在 [NexT](http://theme-next.iissnan.com/) 主题的基础上进行少量的修改后使用。其中最大的修改就是顶栏的背景图片和博客名称了。感觉魔改完一波还是不错的233333
 
 ## 文件结构
 
@@ -71,24 +70,36 @@ article/
 
 问题就在于 hexo 把 markdown 文件*往里移了一层*，但文件内部的 url 不变，所以默认情况下是不可能做到直接预览的…但不能直接预览要怎么愉快地写作？？于是我想到了第一个魔改：
 
-**编译前把 markdown 移出来一层**
+<blockquote class="blockquote-center">编译前把 markdown 移出来一层</blockquote>
 
-😏 具体是在 `_posts` 里，找到目录 A 下与目录同名的 A.md文件，把 A.md 移到 A 目录的上面一层就可以了。有兴趣可以[点这里](https://github.com/hjkcai/blog/blob/hexo/scripts/resolve-url.js#L33)看具体代码。
+😏 具体是在 `_posts` 里，找到目录 A 下与目录同名的 A.md 文件，把 A.md 移到 A 目录的上面一层就可以了。
+
+{% codeblock resolve-url.js lang:javascript https://github.com/hjkcai/blog/blob/hexo/scripts/resolve-url.js#L33 完整代码 %}
+glob
+  .sync('./source/_posts/**/*.md')
+  .filter(file => /(.*)\/\1.md$/.test(file))
+  .map(file => ({ file, dest: file.replace(/(.*)\/(.*)\/\2.md$/, '$1/$2.md') }))
+{% endcodeblock %}
 
 ## CDN 储存
 
 为了保证博客的加载速度，所有静态资源都是使用 CDN 进行加速的。非文章部分的静态资源可以通过改主题配置和主题源码来实现（NexT 作者已经有考虑到了这个问题）。
 
-文章内容是动态生成的，所以必须在生成最终版本的时候就必须替换掉文章中图片引用的 URL。这个替换可以用 [hexo-plugin-cdnify]() 来实现。
+文章内容是动态生成的，所以必须在生成最终版本的时候就必须替换掉文章中图片引用的 URL。这个替换可以用 [hexo-cdnify](https://github.com/zqjimlove/hexo-cdnify) 来实现。
 
-然而直接加上这个插件之后并不管用！因为文章里面的 URL 都是相对路径，经过转换后：
+然而直接加上这个插件之后并不管用！因为文章里面的 URL 都是相对路径，原来的路径是：
 
 ```
-./image.jpg =>
+./image.jpg
+```
+
+经过转换后是：
+
+```
 https://cdn.huajingkun.com/image.jpg
 ```
 
-但是预期的 URL 应该是
+但是预期的 URL 应该是：
 
 ```
 https://cdn.huajingkun.com/article/blog-tech-detail/image.jpg
@@ -96,4 +107,45 @@ https://cdn.huajingkun.com/article/blog-tech-detail/image.jpg
 
 调试发现 hexo 在渲染 markdown 后的 `after-render:html` filter 中没有给出任何的原始 markdown 信息！只提供了渲染后的字符串和是用的模板的路径。所以 CDN 插件才没有办法去根据 markdown 文件路径来解析 URL 而是直接生成。好了没办法了只能再来魔改一次了：
 
+<blockquote class="blockquote-center">编译前解析所有的资源文件 URL 并把这些相对路径都改为绝对路径</blockquote>
 
+{% codeblock resolve-url.js lang:javascript https://github.com/hjkcai/blog/blob/hexo/scripts/resolve-url.js#L39 完整代码 %}
+// 将 url 解析到正确位置
+function resolveUrl (url, file) {
+  if (!url.includes('//') && !url.startsWith('data:')) {
+    return path.resolve('/article', file.replace('./source/_posts/', ''), '..', url)
+  }
+
+  return url
+}
+
+html = html.replace(/!\[(.*)\]\((.*)\)/g, (str, alt, url) => `![${alt}](${resolveUrl(url, file)})`)
+{% endcodeblock %}
+
+😎 这样就搞定了文章内图片资源的问题。
+
+最后我发现页面的 meta 标签中还有一些不通过 CDN 加速的内容，所以又用了一段类似的脚本去替换这些 meta 标签里面的图片资源。这里就不贴代码了，有兴趣[点这里](https://github.com/hjkcai/blog/blob/hexo/scripts/cdnify.js)。
+
+## 草稿问题
+
+完成了上面的内容以后，我还发现，按照当前的项目结构是没有办法储存草稿的！！也就是说如果有写了一半的文章，一旦 push 就是发布。虽然 hexo 自带草稿系统，但是草稿是存在 `_drafts` 文件夹而不是 `_posts` 文件夹下，这就很尴尬了。
+
+于是我在想，每篇文章前面都会有一个 "front-matter" 区域，如果在这里面定义一个 `draft: true` 的字段，编译的时候如果遇到含有 `draft: true` 的文章就直接跳过。但不可能直接通过字符串匹配的方式来做，因为万一文章里面就有这行代码怎么办？
+
+经过大量的调试，我发现 **hexo 在编译时会内建一个数据库来储存要生成的文章**，而且在这个数据库中储存了所有在 front-matter 中定义的字段。这样就很简单了，把符合条件的文章从数据库里面删掉就行！
+
+{% codeblock drafts-killer.js lang:javascript https://github.com/hjkcai/blog/blob/hexo/scripts/drafts-killer.js 完整代码 %}
+if (process.env.NODE_ENV === 'production') {
+  hexo.extend.filter.register('before_generate', () => {
+    return hexo.database._models.Post.remove({ draft: true })
+  })
+}
+{% endcodeblock %}
+
+# 后记
+
+做完整个博客之后有种感觉…所有的坑都是我期望的文件结构导致的🌚 但不管怎么样最后还是成功实现了哈哈！现在上课用手机 vim 打文章，可开心了呢！
+
+![在手机上用 vim 编写文章](./writing-on-vim.png)
+
+另外在手机上有什么编辑器好用…毕竟我只是个 vim 渣渣😂
