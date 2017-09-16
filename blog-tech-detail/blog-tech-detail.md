@@ -74,12 +74,12 @@ article/
 
 😏 具体是在 `_posts` 里，找到目录 A 下与目录同名的 A.md 文件，把 A.md 移到 A 目录的上面一层就可以了。
 
-{% codeblock resolve-url.js lang:javascript https://github.com/hjkcai/blog/blob/hexo/scripts/resolve-url.js#L33 完整代码 %}
+```javascript resolve-url.js https://github.com/hjkcai/blog/blob/hexo/scripts/resolve-url.js#L33 完整代码
 glob
   .sync('./source/_posts/**/*.md')
   .filter(file => /(.*)\/\1.md$/.test(file))
   .map(file => ({ file, dest: file.replace(/(.*)\/(.*)\/\2.md$/, '$1/$2.md') }))
-{% endcodeblock %}
+```
 
 ## CDN 储存
 
@@ -109,7 +109,7 @@ https://cdn.huajingkun.com/article/blog-tech-detail/image.jpg
 
 <blockquote class="blockquote-center">编译前解析所有的资源文件 URL 并把这些相对路径都改为绝对路径</blockquote>
 
-{% codeblock resolve-url.js lang:javascript https://github.com/hjkcai/blog/blob/hexo/scripts/resolve-url.js#L39 完整代码 %}
+```javascript resolve-url.js https://github.com/hjkcai/blog/blob/hexo/scripts/resolve-url.js#L39 完整代码
 // 将 url 解析到正确位置
 function resolveUrl (url, file) {
   if (!url.includes('//') && !url.startsWith('data:')) {
@@ -120,7 +120,7 @@ function resolveUrl (url, file) {
 }
 
 html = html.replace(/!\[(.*)\]\((.*)\)/g, (str, alt, url) => `![${alt}](${resolveUrl(url, file)})`)
-{% endcodeblock %}
+```
 
 😎 这样就搞定了文章内图片资源的问题。
 
@@ -134,13 +134,13 @@ html = html.replace(/!\[(.*)\]\((.*)\)/g, (str, alt, url) => `![${alt}](${resolv
 
 经过大量的调试，我发现 **hexo 在编译时会内建一个数据库来储存要生成的文章**，而且在这个数据库中储存了所有在 front-matter 中定义的字段。这样就很简单了，把符合条件的文章从数据库里面删掉就行！
 
-{% codeblock drafts-killer.js lang:javascript https://github.com/hjkcai/blog/blob/hexo/scripts/drafts-killer.js 完整代码 %}
+```javascript drafts-killer.js https://github.com/hjkcai/blog/blob/hexo/scripts/drafts-killer.js 完整代码
 if (process.env.NODE_ENV === 'production') {
   hexo.extend.filter.register('before_generate', () => {
     return hexo.database._models.Post.remove({ draft: true })
   })
 }
-{% endcodeblock %}
+```
 
 # 后记
 
