@@ -16,6 +16,11 @@ tags:
 
 其实希望每个做 Web 开发的同学都能有自己的一个从零写起的博客（虽然我这个是以别人写好的为基础的🙄 ），在这个博客上**用上各种各样的实验性技术，不断折腾更新**！毕竟只有自己的博客才是真的想怎么搞就可以怎么搞的地方。
 
+<blockquote class="blockquote-center">
+  <p>所有代码和文章都在 github 上，欢迎 dalao 们 star 😏</p>
+  <p><a href="https://github.com/hjkcai/blog">https://github.com/hjkcai/blog</a></p>
+</blockquote>
+
 <!-- more -->
 
 ## 动手之前的计划
