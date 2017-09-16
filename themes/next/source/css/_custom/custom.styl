@@ -5,6 +5,7 @@ $header-height = 321px
 $header-height-small = 226px
 $footer-height = 96px
 $footer-margin = 50px
+$code-font: Inconsolata, Menlo, consolas, monospace
 
 // 调整字体大小
 body
@@ -12,6 +13,10 @@ body
 
 .posts-expand .post-meta
   font-size: 14px
+
+// 调整代码字体
+pre, code
+  font-family: $code-font
 
 // 去除 logo 的黑色背景
 .brand
@@ -196,4 +201,4 @@ figure.highlight figcaption
   margin-bottom: 0
 
   span
-    font-family: Inconsolata, Menlo, consolas, monospace
+    font-family: $code-font
