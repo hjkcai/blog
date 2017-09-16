@@ -18,7 +18,7 @@ tags:
 
 <!-- more -->
 
-# 动手之前的计划
+## 动手之前的计划
 
 在构想这个博客的时候，我设定了几个目标：
 
@@ -30,7 +30,7 @@ tags:
 
 当然方便是最重要的！毕竟懒 🤔
 
-# 选择基础框架
+## 选择基础框架
 
 最开始当然打算自己从零写一个！但是= = 自己实在是太懒了…我 github 上的 blog 仓库建了又删，删了又建，再这样下去怕是要死循环了…再加上现在要去实习，所以打算用框架搞一波！
 
@@ -42,9 +42,9 @@ tags:
 
 当然！这玩意儿的坑也是不少的…现在是时候踩坑了
 
-# Hexo 踩坑记
+## Hexo 踩坑记
 
-## NexT 主题
+### NexT 主题
 
 hexo 的主题还是蛮多的。当然，作为一个懂一点点设计（啊呸）的人当然想自己搞一套！后来还是决定在 [NexT](http://theme-next.iissnan.com/) 主题的基础上进行少量的修改后使用。其中最大的修改就是顶栏的背景图片和博客名称了。感觉魔改完一波还是不错的233333
 
@@ -81,7 +81,7 @@ glob
   .map(file => ({ file, dest: file.replace(/(.*)\/(.*)\/\2.md$/, '$1/$2.md') }))
 ```
 
-## CDN 储存
+### CDN 加速
 
 为了保证博客的加载速度，所有静态资源都是使用 CDN 进行加速的。非文章部分的静态资源可以通过改主题配置和主题源码来实现（NexT 作者已经有考虑到了这个问题）。
 
@@ -124,9 +124,30 @@ html = html.replace(/!\[(.*)\]\((.*)\)/g, (str, alt, url) => `![${alt}](${resolv
 
 😎 这样就搞定了文章内图片资源的问题。
 
-最后我发现页面的 meta 标签中还有一些不通过 CDN 加速的内容，所以又用了一段类似的脚本去替换这些 meta 标签里面的图片资源。这里就不贴代码了，有兴趣[点这里](https://github.com/hjkcai/blog/blob/hexo/scripts/cdnify.js)。
+最后我发现页面的 meta 标签中还有一些不通过 CDN 加速的内容，所以又用了一段类似的脚本去替换这些 meta 标签里面的图片资源。这里就不贴代码了，有兴趣[点这里](https://github.com/hjkcai/blog/blob/hexo/scripts/cdnify.js#L19)。
 
-## 草稿问题
+### 调试问题
+
+在用上了 CDN 加速之后，又有问题来了：**本地调试的时候也使用了 CDN 加速**。这样就完全没办法调试了😷 好吧再来一波魔改：
+
+<blockquote class="blockquote-center"><strong>默认关闭所有 CDN 加速，在生成最终代码的时候再开启</strong></blockquote>
+
+思路就是利用 `process.env.NODE_ENV` 来判断现在是处于生产环境还是开发环境，从而动态调整配置
+
+```javascript cdnify.js https://github.com/hjkcai/blog/blob/hexo/scripts/cdnify.js#L13 完整代码
+hexo.extend.filter.register('before_generate', () => {
+  if (process.env.NODE_ENV === 'production') {
+    hexo.config.cdn.enable = true
+    hexo.theme.config.css = 'https://cdn.huajingkun.com/css'
+    hexo.theme.config.js = 'https://cdn.huajingkun.com/js'
+    hexo.theme.config.images = 'https://cdn.huajingkun.com/images'
+
+    // ...
+  }
+}
+```
+
+### 草稿问题
 
 完成了上面的内容以后，我还发现，按照当前的项目结构是没有办法储存草稿的！！也就是说如果有写了一半的文章，一旦 push 就是发布。虽然 hexo 自带草稿系统，但是草稿是存在 `_drafts` 文件夹而不是 `_posts` 文件夹下，这就很尴尬了。
 
@@ -142,7 +163,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 ```
 
-# 后记
+## 后记
 
 做完整个博客之后有种感觉…所有的坑都是我期望的文件结构导致的🌚 但不管怎么样最后还是成功实现了哈哈！现在上课用手机 vim 打文章，可开心了呢！
 
