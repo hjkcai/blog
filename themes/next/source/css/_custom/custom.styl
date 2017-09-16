@@ -11,6 +11,9 @@ $code-font = Inconsolata, Menlo, consolas, monospace
 body
   font-size: 16px
 
+  @media (max-width: $switch-layout-width)
+    font-size: 14px
+
 .posts-expand .post-meta
   font-size: 14px
 
@@ -210,3 +213,6 @@ figure.highlight figcaption
 
   span
     font-family: $code-font
+
+  a
+    font-size: 0.95em
