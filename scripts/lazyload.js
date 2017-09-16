@@ -18,8 +18,14 @@ hexo.extend.filter.register('after_render:html', async html => {
 
   // 只转换文章中的图片
   if (permalink.pathname.startsWith('/article')) {
-    const pathPrefix = path.resolve(__dirname, '../source/_posts', permalink.pathname.replace('/article/', ''))
     const imgEls = $('article.post .post-body img')
+    let pathPrefix = path.resolve(__dirname, '../source/_posts')
+
+    // 生产环境下会先执行 resolve-url.js 中的路径解析
+    // 所以在生产环境下不能加上 permalink.pathname
+    if (process.env.NODE_ENV === 'development') {
+      pathPrefix = path.join(pathPrefix, permalink.pathname.replace(/^\/article\//, ''))
+    }
 
     for (let i = 0; i < imgEls.length; i++) {
       const $el = $(imgEls[i])
@@ -29,7 +35,7 @@ hexo.extend.filter.register('after_render:html', async html => {
       // 而且该元素的 data-src 属性没有被设置 (不覆盖已有的 lazyload 设置)
       // 则应用 lazyload 设置
       if (imageUrl && !$el.attr('data-original') && !imageUrl.includes('//') && !imageUrl.startsWith('data:')) {
-        const imagePath = path.join(pathPrefix, imageUrl)
+        const imagePath = path.join(pathPrefix, imageUrl.replace(/^\/article\//, ''))
         if (await fs.exists(imagePath)) {
           const image = sharp(imagePath)
           const metadata = await image.metadata()
