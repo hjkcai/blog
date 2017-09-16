@@ -194,20 +194,20 @@ footer#footer
   background-repeat: no-repeat
 
 // 代码块标题
-figure.highlight
+figcaption + table .gutter, figcaption + table .code
   padding-top: 28px
 
-  figcaption
-    position: absolute
-    left: 0
-    width: 100%
-    height: 28px
-    padding: 8px 10px 6px
-    margin-bottom: 0
-    box-sizing: border-box
-    background-color: #eff2f3
-    font-size: 0.9em
-    transform: translateY(-28px)
+figure.highlight figcaption
+  position: absolute
+  left: 0
+  width: 100%
+  height: 28px
+  padding: 8px 10px 6px
+  margin-bottom: 0
+  box-sizing: border-box
+  background-color: #eff2f3
+  font-size: 0.9em
+  transform: translateY(-28px)
 
-    span
-      font-family: $code-font
+  span
+    font-family: $code-font
