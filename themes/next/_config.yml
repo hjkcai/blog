@@ -683,9 +683,9 @@ vendors:
 
 
 # Assets
-css: https://cdn.huajingkun.com/css
-js: https://cdn.huajingkun.com/js
-images: https://cdn.huajingkun.com/images
+css: css
+js: js
+images: images
 
 # Theme version
 version: 5.1.2

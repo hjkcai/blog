@@ -96,5 +96,5 @@ image_minifier:
   enable: false
 
 cdn:
-  enable: true
+  enable: false
   base: https://cdn.huajingkun.com

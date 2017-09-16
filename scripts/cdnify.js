@@ -9,14 +9,21 @@ const metas = [
 ]
 
 hexo.extend.filter.register('before_generate', () => {
-  hexo.extend.filter.register('after_render:html', html => {
-    const $ = cheerio.load(html)
-    metas.forEach(metaSelector => {
-      $(metaSelector).attr('content', (i, content) => {
-        return content.replace('https://huajingkun.com', 'https://cdn.huajingkun.com')
-      })
-    })
+  if (process.env.NODE_ENV === 'production') {
+    hexo.config.cdn.enable = true
+    hexo.theme.config.css = 'https://cdn.huajingkun.com/css'
+    hexo.theme.config.js = 'https://cdn.huajingkun.com/js'
+    hexo.theme.config.images = 'https://cdn.huajingkun.com/images'
 
-    return $.html({ decodeEntities: false })
-  })
+    hexo.extend.filter.register('after_render:html', html => {
+      const $ = cheerio.load(html)
+      metas.forEach(metaSelector => {
+        $(metaSelector).attr('content', (i, content) => {
+          return content.replace('https://huajingkun.com', 'https://cdn.huajingkun.com')
+        })
+      })
+
+      return $.html({ decodeEntities: false })
+    })
+  }
 })
