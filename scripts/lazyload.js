@@ -9,7 +9,12 @@ const cheerio = require('cheerio')
 
 hexo.extend.filter.register('after_render:html', async html => {
   const $ = cheerio.load(html)
-  const permalink = url.parse($('link[rel=canonical]').attr('href'))
+  const href = $('link[rel=canonical]').attr('href')
+  if (typeof href !== 'string' || !href) {
+    return html
+  }
+
+  const permalink = url.parse(href)
 
   // 只转换文章中的图片
   if (permalink.pathname.startsWith('/article')) {
