@@ -77,4 +77,23 @@ article/
 
 ## CDN 储存
 
-为了保证博客的加载速度，所有静态资源都是使用 CDN 进行加速的
+为了保证博客的加载速度，所有静态资源都是使用 CDN 进行加速的。非文章部分的静态资源可以通过改主题配置和主题源码来实现（NexT 作者已经有考虑到了这个问题）。
+
+文章内容是动态生成的，所以必须在生成最终版本的时候就必须替换掉文章中图片引用的 URL。这个替换可以用 [hexo-plugin-cdnify]() 来实现。
+
+然而直接加上这个插件之后并不管用！因为文章里面的 URL 都是相对路径，经过转换后：
+
+```
+./image.jpg =>
+https://cdn.huajingkun.com/image.jpg
+```
+
+但是预期的 URL 应该是
+
+```
+https://cdn.huajingkun.com/article/blog-tech-detail/image.jpg
+```
+
+调试发现 hexo 在渲染 markdown 后的 `after-render:html` filter 中没有给出任何的原始 markdown 信息！只提供了渲染后的字符串和是用的模板的路径。所以 CDN 插件才没有办法去根据 markdown 文件路径来解析 URL 而是直接生成。好了没办法了只能再来魔改一次了：
+
+
