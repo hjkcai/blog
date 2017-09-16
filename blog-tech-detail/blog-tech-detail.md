@@ -14,7 +14,7 @@ tags:
 
 做个博客也是不断踩坑啊…从技术选型到部署，很多都是我从没接触过的东西。所以打算专门写一篇博文来说说做这个博客的时候的一些思考、遇到的坑和解决方案。
 
-其实希望每个做 Web 开发的同学都能有自己的一个从零写起的博客（虽然我这个是以别人写好的为基础的🙄），在这个博客上**用上各种各样的实验性技术，不断折腾更新**！毕竟只有自己的博客才是真的想怎么搞就可以怎么搞的地方。
+其实希望每个做 Web 开发的同学都能有自己的一个从零写起的博客（虽然我这个是以别人写好的为基础的🙄 ），在这个博客上**用上各种各样的实验性技术，不断折腾更新**！毕竟只有自己的博客才是真的想怎么搞就可以怎么搞的地方。
 
 <!-- more -->
 
@@ -28,7 +28,7 @@ tags:
 4. push 后自动部署文章到服务器上
 5. 能够方便地在不同的地方（不同的设备上）编辑文章
 
-当然方便是最重要的！毕竟懒 🙄
+当然方便是最重要的！毕竟懒 🤔
 
 # 选择基础框架
 
@@ -70,7 +70,7 @@ article/
 
 问题就在于 hexo 把 markdown 文件*往里移了一层*，但文件内部的 url 不变，所以默认情况下是不可能做到直接预览的…但不能直接预览要怎么愉快地写作？？于是我想到了第一个魔改：
 
-<blockquote class="blockquote-center">编译前把 markdown 移出来一层</blockquote>
+<blockquote class="blockquote-center"><strong>编译前把 markdown 移出来一层</strong></blockquote>
 
 😏 具体是在 `_posts` 里，找到目录 A 下与目录同名的 A.md 文件，把 A.md 移到 A 目录的上面一层就可以了。
 
@@ -107,7 +107,7 @@ https://cdn.huajingkun.com/article/blog-tech-detail/image.jpg
 
 调试发现 hexo 在渲染 markdown 后的 `after-render:html` filter 中没有给出任何的原始 markdown 信息！只提供了渲染后的字符串和是用的模板的路径。所以 CDN 插件才没有办法去根据 markdown 文件路径来解析 URL 而是直接生成。好了没办法了只能再来魔改一次了：
 
-<blockquote class="blockquote-center">编译前解析所有的资源文件 URL 并把这些相对路径都改为绝对路径</blockquote>
+<blockquote class="blockquote-center"><strong>编译前解析所有的资源文件 URL 并把这些相对路径都改为绝对路径</strong></blockquote>
 
 ```javascript resolve-url.js https://github.com/hjkcai/blog/blob/hexo/scripts/resolve-url.js#L39 完整代码
 // 将 url 解析到正确位置
