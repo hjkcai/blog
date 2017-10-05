@@ -85,7 +85,7 @@ exclude:
 
 all_minifier: true
 html_minifier:
-  enable: true
+  enable: false
   ignore_error: false
   exclude:
 css_minifier:
