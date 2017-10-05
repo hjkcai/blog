@@ -12,14 +12,6 @@ tags:
   - vue-modal-dialogs
 ---
 
-<!-- github buttons start -->
-<p id="github-buttons" style="display:none" align="center">
-  <script async defer onload="document.getElementById('github-buttons').style.display='block'" src="https://buttons.github.io/buttons.js"></script>
-  <a class="github-button" href="https://github.com/hjkcai/vue-modal-dialogs" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star hjkcai/vue-modal-dialogs on GitHub">Star</a>
-  <a class="github-button" href="https://github.com/hjkcai/vue-modal-dialogs/fork" data-icon="octicon-repo-forked" data-size="large" aria-label="Fork hjkcai/vue-modal-dialogs on GitHub">Fork</a>
-</p>
-<!-- github buttons end -->
-
 对话框是用户交互中很重要的一个部分，但是实现一个对话框对于前端开发人员来说却是一件不容易的事情。特别是在逻辑复杂的时候（例如一次要连续显示多组对话框），这时候就会有很多的“开关变量”和事件监听器，逻辑十分跳跃。
 
 自从 ECMAScript 8 开始引入了基于 [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) 的 [async 函数](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function)。利用它我们可以写出与同步代码几乎相同的异步代码。而实际上，“用户交互”也是一个异步的过程。我们可以把事件监听器看作是一个回调函数，而事件的发生就代表着回调函数被调用。
@@ -242,9 +234,6 @@ this.$close(data)       // data 是可选的
 ## 贡献
 
 如果你对 vue-modal-dialogs 有意见或者建议，欢迎在 github 上开 issue 或 PR！
-
-<a class="github-button" href="https://github.com/hjkcai/vue-modal-dialogs/issues" data-icon="octicon-issue-opened" data-size="large" aria-label="Issue hjkcai/vue-modal-dialogs on GitHub">Issue</a>
-<a class="github-button" href="https://github.com/hjkcai/vue-modal-dialogs/fork" data-icon="octicon-repo-forked" data-size="large" aria-label="Fork hjkcai/vue-modal-dialogs on GitHub">Fork</a>
 
 ## 运行开发版本
 
