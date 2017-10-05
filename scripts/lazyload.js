@@ -54,5 +54,5 @@ hexo.extend.filter.register('after_render:html', async html => {
     }
   }
 
-  return $.html({ decodeEntities: true })
+  return $.html({ decodeEntities: false })
 }, 0 /* 保证在其它 filter 之前执行 */)

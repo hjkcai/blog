@@ -49,7 +49,7 @@ glob
       // 由于输入的是 markdown 文件
       // cheerio 在生成 html 时会自动在开头结尾添加一些标签
       // 这里要把这些标签都去掉
-      html = $.html({ decodeEntities: true }).replace(/^<html><head><\/head><body>/, '').replace(/<\/body><\/html>$/, '')
+      html = $.html({ decodeEntities: false }).replace(/^<html><head><\/head><body>/, '').replace(/<\/body><\/html>$/, '')
     }
 
     // 将文件写入新的位置, 并删除原来的文件
