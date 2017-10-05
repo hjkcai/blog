@@ -34,6 +34,11 @@ glob
   .forEach(({ file, dest }) => {
     let html = fs.readFileSync(file).toString()
 
+    // 保证代码块中的 html 正常
+    html = html.replace(/```.*\n([^]*?)```/g, (substring, args) => {
+      return substring.replace(/</g, '&lt;')
+    })
+
     if (process.env.NODE_ENV === 'production') {
       // 读取 markdown 并修改图片标记（![]()）中的 url
       html = html.replace(/!\[(.*)\]\((.*)\)/g, (str, alt, url) => `![${alt}](${resolveUrl(url, file)})`)
