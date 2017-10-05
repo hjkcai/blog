@@ -77,7 +77,7 @@ article/
 
 😏 具体是在 `_posts` 里，找到目录 A 下与目录同名的 A.md 文件，把 A.md 移到 A 目录的上面一层就可以了。
 
-```javascript resolve-url.js https://github.com/hjkcai/blog/blob/hexo/scripts/resolve-url.js#L33 完整代码
+```javascript pre-process.js https://github.com/hjkcai/blog/blob/hexo/scripts/pre-process.js#L33 完整代码
 glob
   .sync('./source/_posts/**/*.md')
   .filter(file => /(.*)\/\1.md$/.test(file))
@@ -112,7 +112,7 @@ https://cdn.huajingkun.com/article/blog-tech-detail/image.jpg
 
 <blockquote class="blockquote-center"><strong>编译前解析所有的资源文件 URL 并把这些相对路径都改为绝对路径</strong></blockquote>
 
-```javascript resolve-url.js https://github.com/hjkcai/blog/blob/hexo/scripts/resolve-url.js#L39 完整代码
+```javascript pre-process.js https://github.com/hjkcai/blog/blob/hexo/scripts/pre-process.js#L39 完整代码
 // 将 url 解析到正确位置
 function resolveUrl (url, file) {
   if (!url.includes('//') && !url.startsWith('data:')) {
