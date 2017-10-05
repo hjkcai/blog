@@ -60,7 +60,9 @@ yarn add vue-modal-dialogs
 
 ## 一个简单的使用例子
 
-```javascript main.js
+```javascript
+// main.js
+
 import Vue from 'vue'
 import ModalDialogs from 'vue-modal-dialogs'
 import MessageComponent from 'components/message.vue'
@@ -87,7 +89,9 @@ new Vue({
 
 在 MessageComponent 中，调用 `this.$close` 函数来关闭这个消息框。你可以给这个函数传入**任意的数据**作为它唯一的参数。你也可以在组件模板中调用这个函数：
 
-```html MessageComponent.vue
+```html
+<!-- MessageComponent.vue -->
+
 <template>
   <div class="message">
     <h1>{{ title }}</h1>
