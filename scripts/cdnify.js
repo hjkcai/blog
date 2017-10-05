@@ -23,7 +23,7 @@ hexo.extend.filter.register('before_generate', () => {
         })
       })
 
-      return $.html({ decodeEntities: false })
+      return $.html({ decodeEntities: true })
     })
   }
 })
