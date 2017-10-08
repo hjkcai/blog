@@ -8,7 +8,7 @@ const sharp = require('sharp')
 const cheerio = require('cheerio')
 
 hexo.extend.filter.register('after_render:html', async html => {
-  const $ = cheerio.load(html)
+  const $ = cheerio.load(html, { _useHtmlParser2: true, decodeEntities: false })
   const href = $('link[rel=canonical]').attr('href')
   if (typeof href !== 'string' || !href) {
     return html
@@ -54,5 +54,5 @@ hexo.extend.filter.register('after_render:html', async html => {
     }
   }
 
-  return $.html({ decodeEntities: false })
+  return $.html()
 }, 0 /* 保证在其它 filter 之前执行 */)

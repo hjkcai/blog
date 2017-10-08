@@ -37,7 +37,7 @@ glob
     if (process.env.NODE_ENV === 'production') {
       // 读取 markdown 并修改图片标记（![]()）中的 url
       html = html.replace(/!\[(.*)\]\((.*)\)/g, (str, alt, url) => `![${alt}](${resolveUrl(url, file)})`)
-      const $ = cheerio.load(html)
+      const $ = cheerio.load(html, { _useHtmlParser2: true, decodeEntities: false })
 
       // 遍历资源标签并修改其中的 url
       Object.keys(tagAttrs).forEach(selector => {
@@ -49,13 +49,8 @@ glob
       // 由于输入的是 markdown 文件
       // cheerio 在生成 html 时会自动在开头结尾添加一些标签
       // 这里要把这些标签都去掉
-      html = $.html({ decodeEntities: false }).replace(/^<html><head><\/head><body>/, '').replace(/<\/body><\/html>$/, '')
+      html = $.html().replace(/^<html><head><\/head><body>/, '').replace(/<\/body><\/html>$/, '')
     }
-
-    // 保证代码块中的 html 正常
-    html = html.replace(/```.*\n([^]*?)```/g, code => {
-      return code.replace(/</g, '&lt;')
-    })
 
     // 将文件写入新的位置, 并删除原来的文件
     fs.writeFileSync(dest, html)
