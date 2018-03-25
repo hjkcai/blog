@@ -76,10 +76,8 @@ axios.interceptors.response.use(response => {
 
 **它的实现让我感觉非常惊艳**。以至于在我看完代码之后，想了好一会儿都没想到更简单的实现（也有可能是我太菜）。
 
-<blockquote class="blockquote-center">
-<p>使用 Promise 链可以很容易地实现执行一连串的异步任务。Ajax 本身可以就是一个异步任务。既然我要让用户用 Interceptor，那其实就是在请求之前和之后执行一些任务嘛，直接用 Promise 链就好啦，还可以顺便支持异步的 Interceptor 呢，多好啊！</p>
-<p>—— axios 作者《我没说过》</p>
-</blockquote>
+<blockquote class="blockquote-center">使用 Promise 链可以很容易地实现执行一连串的异步任务。Ajax 本身可以就是一个异步任务。既然我要让用户用 Interceptor，那其实就是在请求之前和之后执行一些任务嘛，直接用 Promise 链就好啦，还可以顺便支持异步的 Interceptor 呢，多好啊！
+—— axios 作者《我没说过》</blockquote>
 
 axios 实现 Interceptor 的方法实在是简洁啊！我们来看看它的核心代码：
 
