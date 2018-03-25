@@ -83,7 +83,7 @@ axios.interceptors.response.use(response => {
 
 axios 实现 Interceptor 的方法实在是简洁啊！我们来看看它的核心代码：
 
-```javascript lib/Axios.js https://github.com/axios/axios/blob/9a6abd789f91a87d701116c0d86f1cfbc3295d66/lib/core/Axios.js#L39 source
+```javascript lib/core/Axios.js https://github.com/axios/axios/blob/9a6abd789f91a87d701116c0d86f1cfbc3295d66/lib/core/Axios.js#L39 source
 var chain = [dispatchRequest, undefined];
 var promise = Promise.resolve(config);
 
@@ -102,7 +102,7 @@ while (chain.length) {
 
 我们将它的代码稍微改写一下，可以看得更清楚：
 
-```javascript lib/Axios.js
+```javascript lib/core/Axios.js
 var promise = Promise.resolve(config);
 
 this.interceptors.request.forEach(function unshiftRequestInterceptors(interceptor) {
@@ -120,7 +120,7 @@ this.interceptors.response.forEach(function pushResponseInterceptors(interceptor
 
 再看注册 Interceptor 的代码：
 
-```javascript lib/InterceptorManager.js https://github.com/axios/axios/blob/9a6abd789f91a87d701116c0d86f1cfbc3295d66/lib/core/InterceptorManager.js#L17 source
+```javascript lib/core/InterceptorManager.js https://github.com/axios/axios/blob/9a6abd789f91a87d701116c0d86f1cfbc3295d66/lib/core/InterceptorManager.js#L17 source
 InterceptorManager.prototype.use = function use(fulfilled, rejected) {
   this.handlers.push({
     fulfilled: fulfilled,
@@ -134,7 +134,7 @@ InterceptorManager.prototype.use = function use(fulfilled, rejected) {
 
 我认为可以稍微改进一下 Interceptor，在它不返回任何值的时候，就返回第一个参数的内容。这样用户在 Interceptor 中没有返回值的时候（用 TypeScript 表示就是 `void | Promise<void>`），也能正常发起请求。实际上大部分使用 Interceptor 的时候都是简单地修改 `config` 或者 `response` 中的几个属性的，并不会对其进行替换。算是一个小细节修改吧。
 
-```javascript lib/InterceptorManager.js
+```javascript lib/core/InterceptorManager.js
 function wrap (fn) {
   if (typeof fn !== 'function') return;
   return function wrappedThenOrCatch(x) {
@@ -180,6 +180,8 @@ InterceptorManager.prototype.use = function use(fulfilled, rejected) {
 从这个简陋的流程图中可以看出，用户调用的接口是不变的，而具体请求的发送是由内部的 adapter 去做。所以从理论上 axios **可以在任意平台上使用**。通过它的统一 API，axios 可以同时在浏览器和 Node.js 上，使用同一套代码，得到相同的结果（如果配置得当）。我想这也是 Vue 作者推荐在 Vue 项目中使用 axios 的原因之一，因为用户在使用 Server Side Rendering 时就不用担心 Node.js 不支持 `XMLHttpRequest` 了。
 
 另外，通过这一套架构设计，**我们可以把 axios 移植到任意平台上**，例如微信小程序等。实际上我已经有尝试移植过了：[wepy-plugin-axios](https://github.com/hjkcai/wepy-plugin-axios)。目前此项目已经获得了 40 多个 Star。目前这个移植只能用在 [wepy](https://github.com/Tencent/wepy) 上，到时候有时间再重新移植一下，让任意小程序都能使用。
+
+至于 adapter 内具体的代码就不分析了，都是调用系统底层 API 实现的，有兴趣可以直接去看看。
 
 ## 中断请求
 
